@@ -1,7 +1,17 @@
-FROM alpine:3.13.1
+FROM nicosto75/alpine:3.13.2-1
 
-RUN wget -qO- https://github.com/anchore/grype/releases/download/v0.7.0/grype_0.7.0_linux_amd64.tar.gz | tar --directory /usr/local/bin -zxf - grype && \
-    adduser grype --disabled-password --no-create-home
+LABEL maintainer="container-maintainer@zremal.org"
+LABEL "org.zremal"="ZREMAL Inc."
+LABEL version="1.0"
+LABEL description="Grype container image based on Alpine"
 
-USER grype
-CMD sleep 3600
+RUN apk --no-progress --quiet --no-cache add curl \
+    && curl -s http://192.168.10.56:9090/grype-0.9.0-1.zremal.x86_64.apk -o ./pkg.apk \
+    && apk add --no-progress --quiet --no-cache --allow-untrusted ./pkg.apk \
+    && apk del --no-progress --quiet --no-cache curl \
+    && rm -f ./pkg.apk \
+    && adduser scanner --disabled-password --no-create-home
+
+USER scanner
+
+ENTRYPOINT ["/usr/local/bin/grype"] 
