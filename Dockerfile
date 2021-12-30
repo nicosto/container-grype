@@ -1,4 +1,4 @@
-FROM nicosto75/alpine:3.13.2-1
+FROM nicosto75/alpine:3.15.0-1
 
 LABEL maintainer="container-maintainer@zremal.org"
 LABEL "org.zremal"="ZREMAL Inc."
